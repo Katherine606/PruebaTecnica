@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="PruebaTecnica/PruebaTecnica.csproj" />
+  <Project Path="PruebaTecnicaMVC/PruebaTecnicaMVC.csproj" />
+</Solution>
