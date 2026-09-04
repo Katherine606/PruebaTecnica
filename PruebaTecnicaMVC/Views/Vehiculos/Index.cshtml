@@ -1,11 +1,8 @@
-﻿@model IEnumerable<PruebaTecnicaMVC.Models.VehiculoViewModel>
+﻿@model IEnumerable<PruebaTecnicaMVC.Models.ViewModels.VehiculoViewModel>
 
 <div class="container mt-4">
     <h2>Gestión de Flota</h2>
-    <p>
-        <a asp-action="Crear" class="btn btn-primary btn-sm">Nuevo Vehículo</a>
-        <a asp-action="Tablero" class="btn btn-secondary btn-sm">Ver Tablero / Reportes</a>
-    </p>
+ 
 
     @if (Model == null || !Model.Any())
     {
@@ -42,7 +39,7 @@
                         <td>@item.Categoria</td>
                         <td>@item.Estado</td>
                         <td>
-                            <a asp-action="Eliminar" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Eliminar</a>
+                           
                         </td>
                     </tr>
                 }
