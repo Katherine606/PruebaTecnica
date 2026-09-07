@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace VehiculoMVC.Models.ViewModels.Auth
+namespace VehiculoMVC.Models.DTOs.Auth
 {
-    public class AuthLoginVM
+    public class AuthLoginDto
     {
         [Required(ErrorMessage = "El username es obligatorio.")]
         [RegularExpression(@"^[a-zA-Z0-9_]+$",
@@ -13,5 +13,6 @@ namespace VehiculoMVC.Models.ViewModels.Auth
         [RegularExpression(@"^(?=.*[A-Za-z])(?=.*\d).+$",
         ErrorMessage = "La contraseña debe contener al menos una letra y un número.")]
         public string Password { get; set; } = null!;
+
     }
 }

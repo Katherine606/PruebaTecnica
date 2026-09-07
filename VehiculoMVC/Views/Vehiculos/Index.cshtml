@@ -1,49 +1,139 @@
-﻿@model IEnumerable<VehiculoMVC.Models.ViewModels.VehiculoViewModel>
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@model IEnumerable<VehiculoMVC.Models.ViewModels.VehiculoViewModel>
+
+@{
+    ViewData["Title"] = "Gestión de Flota";
+    var rolActual = HttpContextAccessor.HttpContext?.Session.GetString("Rol");
+}
 
 <div class="container mt-4">
-    <h2>Gestión de Flota</h2>
- 
+  
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-0">Gestión de Flota</h2>
+            <p class="text-muted small mb-0">Administra el inventario de vehículos disponibles</p>
+        </div>
+        @if (rolActual == "Admin")
+        {
+            <a asp-controller="Vehiculos" asp-action="Crear" class="btn btn-success shadow-sm">
+                <i class="bi bi-plus-circle me-1"></i> Crear Vehículo
+            </a>
+        }
+    </div>
 
     @if (Model == null || !Model.Any())
     {
-        <div class="alert alert-warning" role="alert">
-            No hay vehículos registrados o no se pudieron cargar desde la API.
+        <div class="card shadow-sm border-0 text-center p-5">
+            <div class="card-body">
+                <i class="bi bi-car-front text-muted display-4 mb-3 d-block"></i>
+                <h5 class="text-muted">No hay vehículos registrados en este momento.</h5>
+            </div>
         </div>
     }
     else
     {
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>Placa</th>
-                    <th>Marca</th>
-                    <th>Modelo</th>
-                    <th>Año</th>
-                    <th>Precio/Día</th>
-                    <th>Km</th>
-                    <th>Categoría</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>@item.Placa</td>
-                        <td>@item.Marca</td>
-                        <td>@item.Modelo</td>
-                        <td>@item.AnioFabricacion</td>
-                        <td>$@item.PrecioAlquilerPorDia</td>
-                        <td>@item.Kilometraje</td>
-                        <td>@item.Categoria</td>
-                        <td>@item.Estado</td>
-                        <td>
-                           
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Placa</th>
+                                <th>Marca / Modelo</th>
+                                <th>Año</th>
+                                <th>Precio/Día</th>
+                                <th>Kilometraje</th>
+                                <th>Categoría</th>
+                                <th>Estado</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="badge bg-light text-dark border border-secondary font-monospace">@item.Placa</span>
+                                    </td>
+                                    <td>
+                                        <strong class="d-block">@item.Marca</strong>
+                                        <small class="text-muted">@item.Modelo</small>
+                                    </td>
+                                    <td>@item.AnioFabricacion</td>
+                                    <td class="fw-bold text-success">$@item.PrecioAlquilerPorDia.ToString("N2")</td>
+                                    <td>@item.Kilometraje.ToString("N0") km</td>
+                                    <td>
+                                        <span class="badge bg-info text-dark">@item.Categoria</span>
+                                    </td>
+                                    <td>
+                                        @{
+                                            var badgeClass = item.Estado switch
+                                            {
+                                                "Disponible" => "bg-success",
+                                                "Alquilado" => "bg-warning text-dark",
+                                                "En Mantenimiento" => "bg-danger",
+                                                _ => "bg-secondary"
+                                            };
+                                        }
+                                        <span class="badge @badgeClass">@item.Estado</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group btn-group-sm" role="group">
+   
+
+                                            @if (rolActual == "Admin")
+                                            {
+                                                <a asp-controller="Vehiculos" asp-action="Editar" asp-route-id="@item.Placa" class="btn btn-outline-warning" title="Editar">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-outline-danger" title="Eliminar" onclick="confirmarEliminar('@item.Placa')">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     }
 </div>
+
+@* Modal de Confirmación de Eliminación *@
+<div class="modal fade" id="modalEliminar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title"><i class="bi bi-exclamation-triangle-fill me-2"></i>Confirmar Eliminación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar el vehículo con placa <strong id="placaEliminar"></strong>?
+            </div>
+            <div class="modal-footer">
+                <form id="formEliminar" method="post" asp-controller="Vehiculos" asp-action="Eliminar">
+                    <input type="hidden" name="placa" id="inputPlacaEliminar" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <script>
+        function confirmarEliminar(placa) {
+            document.getElementById('placaEliminar').innerText = placa;
+            document.getElementById('inputPlacaEliminar').value = placa;
+            var modal = new bootstrap.Modal(document.getElementById('modalEliminar'));
+            modal.show();
+        }
+    </script>
+}

@@ -11,9 +11,6 @@
         public int Kilometraje { get; set; }
         public string Categoria { get; set; } = string.Empty;
         public string Estado { get; set; } = string.Empty;
-        public string EstadoLogico { get; set; } = string.Empty;
-        public string ClasificacionKilometraje { get; set; } = string.Empty;
-        public decimal RecargoSeguroLujo { get; set; }
       
     }
 }

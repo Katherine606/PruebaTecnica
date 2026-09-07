@@ -30,33 +30,43 @@ namespace VehiculoMVC.Services
                 Kilometraje = v.Kilometraje,
                 Categoria = v.Categoria,
                 Estado = v.Estado
-            }).ToList(); // <-- Importante el .ToList() para evitar el error de ListSelectIterator
+            }).ToList(); 
         }
 
-        //public async Task<Vehiculo> ObtenerPorIdAsync(int id)
-        //{
-        //    var vehiculo = await _vehiculoRepository.ObtenerPorIdAsync(id);
-        //    if (vehiculo == null) throw new ApiException("Vehículo no encontrado", 404);
-        //    return vehiculo;
-        //}
+        public async Task<Vehiculo> ObtenerPorIdAsync(int id)
+        {
+            var vehiculo = await _vehiculoRepository.ObtenerPorIdAsync(id);
+            if (vehiculo == null) throw new ApiException("Vehículo no encontrado", 404);
+            return vehiculo;
+        }
 
-        //public async Task CrearAsync(VehiculoCrearDto dto)
-        //{
-        //    var existePlaca = await _vehiculoRepository.ObtenerPorPlacaAsync(dto.Placa);
-        //    if (existePlaca != null)
-        //    {
+        //crear vehiculo
+        public async Task CrearAsync(VehiculoCrearVM vm)
+        {
+       
+            var vehiculoPlaca = await _vehiculoRepository.ObtenerPorPlacaAsync(vm.Placa);
+            if (vehiculoPlaca != null)
+                throw new ApiException("La placa ingresada ya pertenece a otro vehículo.", 400);
 
-        //        if (existePlaca.EstadoLogico == "N")
-        //            throw new ApiException("Ya existe un vehículo con esta placa pero se encuentra eliminado.", 400);
+            if (vm.AnioFabricacion > DateTime.Now.Year)
+                throw new ApiException("El año de fabricación no puede ser futuro.", 400);
 
-        //        throw new ApiException("Ya existe un vehículo registrado con esta placa.", 400);
-        //    }
+            var dto = new VehiculoCrearDto
+            {
+                Placa = vm.Placa,
+                Marca = vm.Marca,
+                Modelo = vm.Modelo,
+                AnioFabricacion = vm.AnioFabricacion,
+                PrecioAlquilerPorDia = vm.PrecioAlquilerPorDia,
+                Kilometraje = vm.Kilometraje,
+                Categoria = vm.Categoria,
+                Estado = vm.Estado,
+                EstadoLogico = "A"
+            };
 
-        //    if (dto.AnioFabricacion > DateTime.Now.Year)
-        //        throw new ApiException("El año de fabricación no puede ser futuro.", 400);
-
-        //    await _vehiculoRepository.CrearAsync(dto);
-        //}
+        
+            await _vehiculoRepository.CrearAsync(dto);
+        }
 
         //public async Task ActualizarAsync(int id, VehiculoCrearDto dto)
         //{

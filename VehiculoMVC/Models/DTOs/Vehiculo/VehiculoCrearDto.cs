@@ -20,7 +20,7 @@ namespace VehiculoMVC.Models.DTOs.Vehiculo
 
         [Required(ErrorMessage = "El año es obligatorio")]
         [Range(1900, 2100, ErrorMessage = "El año de fabricación no es válido.")]
-        public int AnioFabricacion { get; set; }
+        public int AnioFabricacion { get; set; } = DateTime.Now.Year;
 
         [Required(ErrorMessage = "El precio es obligatorio")]
         [Range(0.01, 999999.99, ErrorMessage = "El precio de alquiler por día debe ser mayor a 0.")]
@@ -32,13 +32,13 @@ namespace VehiculoMVC.Models.DTOs.Vehiculo
 
         [Required(ErrorMessage = "La categoría es obligatoria.")]
 
+        [RegularExpression("Sedán|SUV|Camioneta|Lujo")]
         public string Categoria { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "El estado operativo es obligatorio.")]
         [RegularExpression("Disponible|Alquilado|En Mantenimiento", ErrorMessage = "El estado operativo debe ser: Disponible, Alquilado o En Mantenimiento.")]
         public string Estado { get; set; } = "Disponible";
 
-        [RegularExpression("A|I|N", ErrorMessage = "El estado lógico debe ser A (Activo), I (Inactivo) o N (Eliminado).")]
         public string EstadoLogico { get; set; } = "A";
     }
 }
