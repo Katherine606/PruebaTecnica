@@ -1,0 +1,79 @@
+﻿@* @model VehiculoMVC.Models.ViewModels.TableroViewModel
+
+<div class="container mt-4">
+    <h2>Tablero y Reportes de Flota</h2>
+    <hr />
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card p-3 bg-light">
+                <h5>Total de Vehículos: @(Model?.TotalVehiculos ?? 0)</h5>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-3 bg-light">
+                <h5>Valor Proyectado Diario: $@(Model?.ValorMonetarioTotalProyectadoDiario ?? 0)</h5>
+            </div>
+        </div>
+    </div>
+
+    <h4>Desglose por Categoría</h4>
+    <table class="table table-sm table-bordered mb-4">
+        <thead>
+            <tr>
+                <th>Categoría</th>
+                <th>Total</th>
+                <th>Promedio Km</th>
+                <th>Costo Promedio</th>
+                <th>Proyección Diaria</th>
+                <th>Recargo Seguro Lujo (12%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model?.DesglosePorCategoria != null)
+            {
+                foreach (var cat in Model.DesglosePorCategoria)
+                {
+                    <tr>
+                        <td>@cat.Categoria</td>
+                        <td>@cat.TotalVehiculos</td>
+                        <td>@Math.Round(cat.PromedioKilometraje, 2)</td>
+                        <td>$@Math.Round(cat.CostoPromedioAlquiler, 2)</td>
+                        <td>$@cat.ValorTotalProyectadoDiario</td>
+                        <td>$@cat.TotalRecargosSeguroLujo</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    <h4>Vehículos que Requieren Atención Inmediata</h4>
+    <table class="table table-sm table-striped">
+        <thead>
+            <tr>
+                <th>Placa</th>
+                <th>Marca</th>
+                <th>Km</th>
+                <th>Clasificación</th>
+                <th>Estado Operativo</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model?.VehiculosRequierenAtencion != null)
+            {
+                foreach (var v in Model.VehiculosRequierenAtencion)
+                {
+                    <tr>
+                        <td>@v.Placa</td>
+                        <td>@v.Marca</td>
+                        <td>@v.Kilometraje</td>
+                        <td><span class="badge bg-warning text-dark">@v.ClasificacionKilometraje</span></td>
+                        <td>@v.Estado</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    <a asp-action="Index" class="btn btn-secondary btn-sm mt-3">Volver a la Flota</a>
+</div> *@

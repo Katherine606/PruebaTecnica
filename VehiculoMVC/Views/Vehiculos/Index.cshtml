@@ -1,0 +1,49 @@
+﻿@model IEnumerable<VehiculoMVC.Models.ViewModels.VehiculoViewModel>
+
+<div class="container mt-4">
+    <h2>Gestión de Flota</h2>
+ 
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-warning" role="alert">
+            No hay vehículos registrados o no se pudieron cargar desde la API.
+        </div>
+    }
+    else
+    {
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Placa</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Año</th>
+                    <th>Precio/Día</th>
+                    <th>Km</th>
+                    <th>Categoría</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Placa</td>
+                        <td>@item.Marca</td>
+                        <td>@item.Modelo</td>
+                        <td>@item.AnioFabricacion</td>
+                        <td>$@item.PrecioAlquilerPorDia</td>
+                        <td>@item.Kilometraje</td>
+                        <td>@item.Categoria</td>
+                        <td>@item.Estado</td>
+                        <td>
+                           
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
