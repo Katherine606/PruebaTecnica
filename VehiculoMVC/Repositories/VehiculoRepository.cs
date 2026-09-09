@@ -41,6 +41,16 @@ namespace VehiculoMVC.Repositories
             await _context.ExecuteAsync(query, dto);
         }
 
+        public async Task ActualizarAsync(VehiculoCrearDto dto)
+        {
+            
+
+            var query = "UPDATE Vehiculos SET Marca = @Marca, Modelo = @Modelo, AnioFabricacion = @AnioFabricacion, " +
+                        "PrecioAlquilerPorDia = @PrecioAlquilerPorDia, Kilometraje = @Kilometraje, " +
+                        "Categoria = @Categoria, Estado = @Estado, EstadoLogico = @EstadoLogico WHERE Placa = @Placa";
+
+            await _context.ExecuteAsync(query, dto);
+        }
 
     }
 }

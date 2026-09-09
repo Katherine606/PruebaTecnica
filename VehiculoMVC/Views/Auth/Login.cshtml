@@ -4,59 +4,33 @@
     ViewData["Title"] = "Iniciar Sesión";
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
+<div class="row justify-content-center align-items-center" style="min-height: 75vh;">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-3 p-4">
+            <h4 class="text-center mb-4 fw-bold text-dark">Bienvenido</h4>
 
-            <h2 class="text-center mb-4">
-                Login
-            </h2>
-
-            @if (ViewBag.Error != null)
+            @if (!string.IsNullOrEmpty(ViewBag.Error))
             {
-                <div class="alert alert-danger">
+                <div class="alert alert-danger py-2 small rounded-2 mb-3">
                     @ViewBag.Error
                 </div>
             }
 
             <form asp-action="Login" method="post">
-
                 <div class="mb-3">
-                    <label asp-for="Username" class="form-label">
-                        Usuario
-                    </label>
-
-                    <input asp-for="Username"
-                           class="form-control" />
-
-                    <span asp-validation-for="Username"
-                          class="text-danger"></span>
+                    <label asp-for="Username" class="form-label small text-secondary fw-semibold">Usuario</label>
+                    <input asp-for="Username" class="form-control form-control-sm py-2" placeholder="Ingrese su usuario" />
+                    <span asp-validation-for="Username" class="text-danger small"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="Password" class="form-label">
-                        Contraseña
-                    </label>
-
-                    <input asp-for="Password"
-                           type="password"
-                           class="form-control" />
-
-                    <span asp-validation-for="Password"
-                          class="text-danger"></span>
+                    <label asp-for="Password" class="form-label small text-secondary fw-semibold">Contraseña</label>
+                    <input asp-for="Password" type="password" class="form-control form-control-sm py-2" placeholder="******" />
+                    <span asp-validation-for="Password" class="text-danger small"></span>
                 </div>
 
-                <button type="submit"
-                        class="btn btn-primary w-100">
-                    Iniciar sesión
-                </button>
-
+                <button type="submit" class="btn btn-dark btn-sm w-100 py-2 mt-2">Ingresar</button>
             </form>
-      
         </div>
     </div>
 </div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}

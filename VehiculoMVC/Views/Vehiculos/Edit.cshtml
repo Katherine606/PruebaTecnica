@@ -1,10 +1,10 @@
-﻿@model VehiculoMVC.Models.ViewModels.VehiculoCrearVM
+﻿@model VehiculoMVC.Models.ViewModels.VehiculoEditVM
 
 <div class="row mt-4">
     <div class="col-sm-6 offset-sm-3">
         <h2>Nuevo Vehículo</h2>
 
-        <form asp-controller="Vehiculos" asp-action="Crear" method="post">
+        <form asp-controller="Vehiculos" asp-action="Edit" method="post">
             <div class="mb-3">
                 <label asp-for="Placa" class="form-label">Placa</label>
                 <input type="text" class="form-control" asp-for="Placa" placeholder="Ej. ABC-1234">
@@ -63,6 +63,15 @@
                 <span asp-validation-for="Estado" class="text-danger"></span>
             </div>
 
+            <div class="mb-3">
+                <label asp-for="EstadoLogico" class="form-label">Estado Lógico</label>
+                <select class="form-select" asp-for="EstadoLogico">
+                    <option value="A">Activo</option>
+                    <option value="I">Inactivo</option>
+                </select>
+                <span asp-validation-for="EstadoLogico" class="text-danger"></span>
+            </div>
+
             @if (ViewBag.message != null)
             {
                 <div class="alert alert-danger" role="alert">
@@ -71,7 +80,7 @@
             }
 
             <div class="d-grid gap-2 d-md-block">
-                <button class="btn btn-primary"  type="submit">Crear</button>
+                <button class="btn btn-primary" type="submit">Edit</button>
                 <a asp-controller="Vehiculos" asp-action="Index" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>

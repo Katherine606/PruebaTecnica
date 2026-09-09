@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using VehiculoMVC.Exceptions;
 using VehiculoMVC.Models.ViewModels.Auth;
 using VehiculoMVC.Services;
 
@@ -38,12 +39,10 @@ namespace VehiculoMVC.Controllers
                     return View(modelo);
                 }
 
-               
                 HttpContext.Session.SetString("Token", token);
 
                 var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
                 var jwtToken = handler.ReadJwtToken(token);
-
 
                 var rol = jwtToken.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role || c.Type == "role")?.Value;
                 var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier || c.Type == "sub")?.Value;
@@ -53,19 +52,26 @@ namespace VehiculoMVC.Controllers
 
                 return RedirectToAction("Index", "Vehiculos");
             }
-            catch (HttpRequestException ex)
+            catch (ApiException ex) // <-- Captura tu excepción personalizada de negocio
             {
-                ViewBag.Error = ex.Message;
+                ViewBag.Error = ex.Message; // Muestra "El usuario no existe" o "La contraseña es incorrecta"
+                return View(modelo);
+            }
+            catch (Exception)
+            {
+                ViewBag.Error = "Ocurrió un error inesperado en el servidor.";
                 return View(modelo);
             }
         }
 
+        
         [HttpPost]
-        public async Task<IActionResult> Logout()
+        public IActionResult Logout()
         {
             HttpContext.Session.Clear();
             return RedirectToAction("Login", "Auth");
         }
+
 
     }
 }

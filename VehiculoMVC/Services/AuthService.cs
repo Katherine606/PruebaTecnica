@@ -30,7 +30,12 @@ namespace VehiculoMVC.Services
 
             }
 
+            // Agrega esto para ver qué está leyendo exactamente la base de datos
+            Console.WriteLine($"Usuario encontrado: [{usuario.Username}] con Hash: [{usuario.PasswordHash}]");
+            Console.WriteLine($"Contraseña ingresada: [{dto.Password}]");
+
             bool esPasswordValido = BCrypt.Net.BCrypt.Verify(dto.Password, usuario.PasswordHash);
+            Console.WriteLine($"¿Es válido?: {esPasswordValido}");
 
             if (!esPasswordValido)
             {

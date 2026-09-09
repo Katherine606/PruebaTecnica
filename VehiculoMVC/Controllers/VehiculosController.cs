@@ -25,7 +25,7 @@ namespace VehiculoMVC.Controllers
 
         //crear vehiculo
         [HttpGet]
-        public async Task<IActionResult> Crear()
+        public IActionResult Crear()
         {
             return View();
         }
@@ -42,17 +42,54 @@ namespace VehiculoMVC.Controllers
                 await _vehiculoService.CrearAsync(vm);
                 return RedirectToAction("Index");
             }
+ 
             catch (ApiException ex)
             {
-                ModelState.AddModelError(string.Empty, ex.Message);
+                        ViewBag.message = ex.Message; 
+                        return View(vm);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(string id)
+        {
+            try
+            {
+                var vm = await _vehiculoService.ObtenerParaEditarAsync(id);
+                return View(vm);
+            }
+            catch (ApiException ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(VehiculoEditVM vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(vm);
+            }
+
+            try
+            {
+                await _vehiculoService.ActualizarAsync(vm);
+                return RedirectToAction("Index");
+            }
+            catch (ApiException ex)
+            {
+                ViewBag.message = ex.Message;
                 return View(vm);
             }
         }
 
-        //public async Task<IActionResult> Tablero()
-        //{
-        //    var tablero = await _vehiculoService.ObtenerTableroReporteAsync();
-        //    return View(tablero);
-        //}
+        [HttpGet]
+        public async Task<IActionResult> Tablero()
+        {
+            var tablero = await _vehiculoService.ObtenerTableroReporteAsync();
+            return View(tablero);
+        }
     }
 }

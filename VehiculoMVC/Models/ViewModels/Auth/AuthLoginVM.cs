@@ -4,14 +4,10 @@ namespace VehiculoMVC.Models.ViewModels.Auth
 {
     public class AuthLoginVM
     {
-        [Required(ErrorMessage = "El username es obligatorio.")]
-        [RegularExpression(@"^[a-zA-Z0-9_]+$",
-       ErrorMessage = "El username solo puede contener letras, números y guion bajo.")]
-        public string Username { get; set; } = null!;
+        [Required(ErrorMessage = "El usuario es obligatorio.")]
+        public string Username { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "La contraseña es obligatoria.")]
-        [RegularExpression(@"^(?=.*[A-Za-z])(?=.*\d).+$",
-        ErrorMessage = "La contraseña debe contener al menos una letra y un número.")]
-        public string Password { get; set; } = null!;
+        public string Password { get; set; } = string.Empty;
     }
 }
