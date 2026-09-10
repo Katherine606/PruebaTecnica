@@ -52,5 +52,11 @@ namespace VehiculoMVC.Repositories
             await _context.ExecuteAsync(query, dto);
         }
 
+        public async Task EliminarAsync(string placa)
+        {
+         
+            var query = "UPDATE Vehiculos SET EstadoLogico = 'N' WHERE Placa = @Placa";
+            await _context.ExecuteAsync(query, new { Placa = placa });
+        }
     }
 }

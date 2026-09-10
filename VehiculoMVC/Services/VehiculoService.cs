@@ -188,5 +188,14 @@ namespace VehiculoMVC.Services
 
             await _vehiculoRepository.ActualizarAsync(dto);
         }
+
+        public async Task EliminarAsync(string placa)
+        {
+            var vehiculoExistente = await _vehiculoRepository.ObtenerPorPlacaAsync(placa);
+            if (vehiculoExistente == null)
+                throw new ApiException("El vehículo que intenta eliminar no existe.", 404);
+
+            await _vehiculoRepository.EliminarAsync(placa);
+        }
     }
 }

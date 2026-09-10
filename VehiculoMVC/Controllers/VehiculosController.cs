@@ -85,6 +85,21 @@ namespace VehiculoMVC.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Eliminar(string placa)
+        {
+            try
+            {
+                await _vehiculoService.EliminarAsync(placa);
+                return RedirectToAction("Index");
+            }
+            catch (ApiException ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Index");
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> Tablero()
         {
